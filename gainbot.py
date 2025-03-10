@@ -1,29 +1,42 @@
+import os
 import telebot
 
-# 🔹 Remplace par ton Token API donné par BotFather
-TOKEN = "7847892552:AAFg8UMNV2KJ5_dK2E1c5o2ln-rjq16Bc_E"
+# Récupérer le token depuis une variable d'environnement
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+# Vérifier si le token est bien chargé
+if not TOKEN:
+    raise ValueError("❌ Erreur : Le token du bot n'est pas défini ! Assurez-vous d'avoir configuré la variable d'environnement.")
+
 bot = telebot.TeleBot(TOKEN)
 
-# 📌 Commande /start
+# Commande /start
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "🚀 Bienvenue sur GainBot ! Tape /help pour voir les options.")
+    bot.send_message(message.chat.id, "Bienvenue sur GainBot ! Tape /help pour voir les options.")
 
-# 📌 Commande /help
+# Commande /help
 @bot.message_handler(commands=['help'])
 def help_command(message):
-    bot.send_message(message.chat.id, "📌 Commandes disponibles :\n"
-                                      "/start - Démarrer le bot\n"
-                                      "/premium - S’abonner à GainBot Premium\n"
-                                      "/help - Obtenir de l’aide")
+    bot.send_message(
+        message.chat.id,
+        "📌 **Commandes disponibles :**\n"
+        "/start - Démarrer le bot\n"
+        "/premium - S'abonner à GainBot Premium\n"
+        "/help - Obtenir de l'aide",
+        parse_mode="Markdown"
+    )
 
-# 📌 Commande /premium (renvoie vers le paiement Mollie)
+# Commande /premium
 @bot.message_handler(commands=['premium'])
 def premium(message):
-    bot.send_message(message.chat.id, "💳 **Pour accéder à GainBot Premium, clique ici :**\n"
-                                      "🔗 [Paiement sécurisé via Mollie](https://pay.mollie.com/gainbot-premium)",
-                     parse_mode="Markdown")
+    bot.send_message(
+        message.chat.id,
+        "💎 **Pour accéder à GainBot Premium, clique ici :**\n\n"
+        "[Paiement sécurisé via Mollie](https://pay.mollie.com/gainbot-premium)",
+        parse_mode="Markdown"
+    )
 
-# 🔥 Lancer le bot
-print("🚀 GainBot est en ligne...")
+print("✅ GainBot est en ligne...")
+
 bot.polling()
